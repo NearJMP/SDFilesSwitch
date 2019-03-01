@@ -1,41 +1,40 @@
 #!/usr/bin/env python
 # Merges all modules together because I'm lazy ;^)
 
-import subprocess as sbp
 import os
 import shutil
 
-modules = ["appstore", "bootlogo", "checkpoint", "edizon", "es_patches", 
-        "fusee_atmosphere", "hbmenu", "hekate_payload", "must_have", 
-        "reinx", "sdfilesupdater", "sunpresence", "switchpresence", 
-        "sys-ftpd", "sys-netcheat", "xor.play", "sdfiles_toolkit", 
-        "kip_patches", "tinfoil"] # Everything that will be merged together
-p2 = "compiled" # How the merged folder should be called
-
-print("""
-                        https://github.com/tumGER/
-   _____ _____  ______ _ _            _____         _ _       _     
-  / ____|  __ \|  ____(_) |          / ____|       (_) |     | |    
- | (___ | |  | | |__   _| | ___  ___| (_____      ___| |_ ___| |__  
-  \___ \| |  | |  __| | | |/ _ \/ __|\___ \ \ /\ / / | __/ __| '_ \ 
-  ____) | |__| | |    | | |  __/\__ \____) \ V  V /| | || (__| | | |
- |_____/|_____/|_|    |_|_|\___||___/_____/ \_/\_/ |_|\__\___|_| |_|
-                                                                    
-                    By: @_tomGER (tumGER on Github)
-
-It could be that a permissions error will pop up, fix it by restarting the python script! We don\'t really know why that happens!
-""") # Fancy stuff
-
 if os.path.exists("compiled"):
-    shutil.rmtree("compiled") # Delete Content of "compiled" if it exists!
+    shutil.rmtree("compiled") 
 
-os.makedirs("compiled") # Double check
+modules = [module for module in os.listdir() if os.path.isdir(module)]
+
+def copyDir(srcDir, dstDir):
+    os.makedirs(dstDir, exist_ok=True)
+    fds = os.listdir(srcDir)
+    for fd in fds:
+        srcfp = os.path.join(srcDir, fd)
+        dstfp = os.path.join(dstDir, fd)
+
+        if os.path.isdir(srcfp):
+            copyDir(srcfp, dstfp)
+        else:
+            shutil.copy(srcfp, dstfp)
+
+print(r"""
+                        https://github.com/AtlasNX/Kosmos
+ ____  __.                                 
+|    |/ _|____  ______ _____   ____  ______
+|      < /  _ \/  ___//     \ /  _ \/  ___/
+|    |  (  <_> )___ \|  Y Y  (  <_> )___ \ 
+|____|__ \____/____  >__|_|  /\____/____  >
+        \/         \/      \/           \/ 
+                                                                    
+                    By: @AtlasNX (AtlasNX/Kosmos on Github)""")
+
+os.makedirs("compiled")
 
 for path in modules:
-    fol = os.listdir(path)
-    for i in fol:
-        p1 = os.path.join(path,i)
-        p3 = 'cp -r ' + p1 +' ' + p2+'/.'
-        sbp.Popen(p3,shell=True)
+    copyDir(path, "compiled")
 
 print("Done!")
